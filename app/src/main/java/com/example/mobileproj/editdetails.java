@@ -72,26 +72,48 @@ public class editdetails extends AppCompatActivity {
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                 .setDisplayName(name.getText().toString())
                 .build();
-
-        user.updateProfile(request)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(editdetails.this,"Successfully updated Profile Name",Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("TAG","onFailure:", e.getCause());
-            }
-        });
-
+        if(user.getDisplayName() != name.getText().toString()) {
+            user.updateProfile(request)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(editdetails.this, "Successfully updated Profile Name", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("TAG", "onFailure:", e.getCause());
+                }
+            });
+        }
         if(email.getText().toString()!=user.getEmail()){
-            user.updateEmail(email.getText().toString());
+            user.updateEmail(email.getText().toString())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(editdetails.this,"Successfully updated Email Address",Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("TAG", "onFailure:", e.getCause());
+                }
+            });
         }
 
         if(pass.getText().toString().length()>7){
-            user.updatePassword(pass.getText().toString());
+            user.updatePassword(pass.getText().toString())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(editdetails.this,"Successfully updated Password",Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("TAG", "onFailure:", e.getCause());
+                }
+            });
         }
     }
 
@@ -161,7 +183,7 @@ public class editdetails extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(editdetails.this,"Success!!!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(editdetails.this,"Successfully Updated Profile Image",Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -171,4 +193,8 @@ public class editdetails extends AppCompatActivity {
         });
     }
 
+
+    public void gohome(View view) {
+        startActivity(new Intent(this,MainActivity.class));
+    }
 }
