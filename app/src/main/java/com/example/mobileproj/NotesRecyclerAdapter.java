@@ -71,11 +71,16 @@ public class NotesRecyclerAdapter extends FirestoreRecyclerAdapter<note, NotesRe
                 }
             });
         }
+
+        public void deleteItem(){
+            noteListener.handleDeleteItem(getSnapshots().getSnapshot(getAdapterPosition()));
+        }
     }
 
     interface NoteListener{
         public void handleCheckChanged(boolean isChecked, DocumentSnapshot snapshot);
         public void handleEditNote(DocumentSnapshot snapshot);
+        public void handleDeleteItem(DocumentSnapshot snapshot);
     }
 
 }
