@@ -36,7 +36,9 @@ public class homepage extends AppCompatActivity {
     public void logreg(View view){
 
         List<AuthUI.IdpConfig> provider = Arrays.asList(
-                new AuthUI.IdpConfig.EmailBuilder().build()
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.PhoneBuilder().build()
         );
 
         Intent intent = AuthUI.getInstance().
