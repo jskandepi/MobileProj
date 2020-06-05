@@ -184,7 +184,9 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         Query query = FirebaseFirestore.getInstance()
                 .collection("notes")
-                .whereEqualTo("userId",user.getUid());
+                .whereEqualTo("userId",user.getUid())
+                .orderBy("completed",Query.Direction.ASCENDING)
+                .orderBy("created",Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<note> options = new FirestoreRecyclerOptions.Builder<note>()
                 .setQuery(query,note.class)
