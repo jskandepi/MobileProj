@@ -146,11 +146,10 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item2:
-                Toast.makeText(this,"1", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this,Profile.class));
                 return true;
             case R.id.item3:
                 AuthUI.getInstance().signOut(this);
-
                 return true;
             default:
                 return true;
