@@ -3,6 +3,7 @@ package com.example.mobileproj;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
@@ -18,6 +19,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,19 +29,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener{
+public class MainActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener,NotesRecyclerAdapter.NoteListener{
 
     RecyclerView recyclerView;
+
+    NotesRecyclerAdapter notesadapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener(){
@@ -132,5 +144,62 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
             startHome();
             return;
         }
+
+        initRecyclerView(firebaseAuth.getCurrentUser());
+    }
+
+    private void initRecyclerView(FirebaseUser user){
+
+        Query query = FirebaseFirestore.getInstance()
+                .collection("notes")
+                .whereEqualTo("userId",user.getUid());
+
+        FirestoreRecyclerOptions<note> options = new FirestoreRecyclerOptions.Builder<note>()
+                .setQuery(query,note.class)
+                .build();
+
+        notesadapter = new NotesRecyclerAdapter(options,this);
+        recyclerView.setAdapter(notesadapter);
+
+        notesadapter.startListening();
+
+    }
+
+
+    @Override
+    public void handleCheckChanged(boolean isChecked, DocumentSnapshot snapshot) {
+        snapshot.getReference().update("completed",isChecked)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("s","onSuccess:");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("s","onFailure:"+e.getLocalizedMessage());
+            }
+        });
+    }
+
+    @Override
+    public void handleEditNote(final DocumentSnapshot snapshot) {
+
+        final note note = snapshot.toObject(note.class);
+        final EditText editText = new EditText(this);
+        editText.setText(note.getText());
+        editText.setSelection((note.getText().length()));
+        new AlertDialog.Builder(this)
+                .setTitle("Edit Note")
+                .setView(editText)
+                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String  newText = editText.getText().toString();
+                        note.setText(newText);
+                        snapshot.getReference().set(note);
+                    }
+                }).setNegativeButton("Cancel",null)
+                .show();
     }
 }
