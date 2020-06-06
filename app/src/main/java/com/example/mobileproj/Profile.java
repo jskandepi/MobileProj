@@ -2,13 +2,13 @@ package com.example.mobileproj;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -20,6 +20,7 @@ public class Profile extends AppCompatActivity {
     TextView profileName;
     TextView Email;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,5 +48,9 @@ public class Profile extends AppCompatActivity {
 
     public void edit(View view){
         startActivity(new Intent(Profile.this,editdetails.class));
+    }
+
+    public void gohome(View view) {
+        startActivity(new Intent(this,MainActivity.class));
     }
 }

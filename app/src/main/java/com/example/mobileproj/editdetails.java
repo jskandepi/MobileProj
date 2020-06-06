@@ -20,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -69,15 +68,17 @@ public class editdetails extends AppCompatActivity {
     public void update(View view){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                .setDisplayName(name.getText().toString())
-                .build();
+
         if(user.getDisplayName() != name.getText().toString()) {
+            UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(name.getText().toString())
+                    .build();
+
             user.updateProfile(request)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(editdetails.this, "Successfully updated Profile Name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(editdetails.this, "Successfully updated", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -86,12 +87,13 @@ public class editdetails extends AppCompatActivity {
                 }
             });
         }
+
         if(email.getText().toString()!=user.getEmail()){
             user.updateEmail(email.getText().toString())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(editdetails.this,"Successfully updated Email Address",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(editdetails.this,"Successfully updated",Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -106,7 +108,7 @@ public class editdetails extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(editdetails.this,"Successfully updated Password",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(editdetails.this,"Successfully updated",Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override

@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 showAlertDialog();
             }
         });
+        fab.setImageResource(R.drawable.ic_add_black_24dp);
     }
 
     private void showAlertDialog(){
